@@ -2,7 +2,7 @@ import { bigint, boolean, foreignKey, integer, jsonb, pgTable, text, timestamp, 
 import { pricingPlanInterval, pricingType, subscriptionStatus } from '../../../migrations/schema';
 import { sql } from 'drizzle-orm';
 
-export const Workspaces = pgTable('workspaces', {
+export const workspaces = pgTable('workspaces', {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
     createdAt: timestamp('created_at', {
         withTimezone: true,
@@ -21,7 +21,7 @@ export const Workspaces = pgTable('workspaces', {
     bannerUrl: text('banner_url'),    
 });
 
-export const Folders = pgTable('folders', {
+export const folders = pgTable('folders', {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
     createdAt: timestamp('created_at', {
       withTimezone: true,
@@ -36,12 +36,12 @@ export const Folders = pgTable('folders', {
     bannerUrl: text('banner_url'),
     workspaceId: uuid('workspace_id')
       .notNull()
-      .references(() => Workspaces.id, {
+      .references(() => workspaces.id, {
         onDelete: 'cascade',
       }),
   });
 
-  export const Files = pgTable('files', {
+  export const files = pgTable('files', {
     id: uuid('id').defaultRandom().primaryKey().notNull(),
     createdAt: timestamp('created_at', {
       withTimezone: true,
@@ -56,18 +56,18 @@ export const Folders = pgTable('folders', {
     bannerUrl: text('banner_url'),
     workspaceId: uuid('workspace_id')
       .notNull()
-      .references(() => Workspaces.id, {
+      .references(() => workspaces.id, {
         onDelete: 'cascade',
       }),
     folderId: uuid('folder_id')
       .notNull()
-      .references(() => Folders.id, {
+      .references(() => folders.id, {
         onDelete: 'cascade',
       }),
   });
 
 
-  export const Users = pgTable("users", {
+  export const users = pgTable("users", {
     id: uuid("id").primaryKey().notNull(),
     fullName: text("full_name"),
     avatarUrl: text("avatar_url"),
@@ -86,12 +86,12 @@ export const Folders = pgTable('folders', {
     }
   });
   
-  export const Customers = pgTable("customers", {
-    id: uuid("id").primaryKey().notNull().references(() => Users.id),
+  export const customers = pgTable("customers", {
+    id: uuid("id").primaryKey().notNull().references(() => users.id),
     stripeCustomerId: text("stripe_customer_id"),
   });
   
-  export const Products = pgTable("products", {
+  export const products = pgTable("products", {
     id: text("id").primaryKey().notNull(),
     active: boolean("active"),
     name: text("name"),
@@ -100,9 +100,9 @@ export const Folders = pgTable('folders', {
     metadata: jsonb("metadata"),
   });
   
-  export const Prices = pgTable("prices", {
+  export const prices = pgTable("prices", {
     id: text("id").primaryKey().notNull(),
-    productId: text("product_id").references(() => Products.id),
+    productId: text("product_id").references(() => products.id),
     active: boolean("active"),
     description: text("description"),
     // You can use { mode: "bigint" } if numbers are exceeding js number limitations
@@ -115,12 +115,12 @@ export const Folders = pgTable('folders', {
     metadata: jsonb("metadata"),
   });
   
-  export const Subscriptions = pgTable("subscriptions", {
+  export const subscriptions = pgTable("subscriptions", {
     id: text("id").primaryKey().notNull(),
-    userId: uuid("user_id").notNull().references(() => Users.id),
+    userId: uuid("user_id").notNull().references(() => users.id),
     status: subscriptionStatus("status"),
     metadata: jsonb("metadata"),
-    priceId: text("price_id").references(() => Prices.id),
+    priceId: text("price_id").references(() => prices.id),
     quantity: integer("quantity"),
     cancelAtPeriodEnd: boolean("cancel_at_period_end"),
     created: timestamp("created", { withTimezone: true, mode: 'string' }).default(sql`now()`).notNull(),
