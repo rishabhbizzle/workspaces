@@ -4,6 +4,7 @@ import "./globals.css";
 import db from "@/lib/supabase/db";
 import { ThemeProvider } from "@/lib/providers/theme-provider";
 import AppStateProvider from "@/lib/providers/state-provider";
+import { SupabaseUserProvider } from "@/lib/providers/user-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 // console.log(db);
@@ -21,10 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-        <AppStateProvider>
-
-          {children}
-        </AppStateProvider>
+          <AppStateProvider>
+            <SupabaseUserProvider>{children}</SupabaseUserProvider>
+          </AppStateProvider>
         </ThemeProvider>
       </body>
     </html>
