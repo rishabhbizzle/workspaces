@@ -71,6 +71,8 @@ const WorkspaceDropdown: React.FC<WorkspaceDropdownProps> = ({
           absolute
           w-full
           rounded-md
+        overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']
+
           shadow-md
           z-50
           h-[190px]

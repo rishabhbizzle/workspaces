@@ -10,6 +10,10 @@ import {
 } from "@/lib/supabase/queries";
 import { cn } from "@/lib/utils";
 import WorkspaceDropdown from "./workspace-dropdown";
+import { ScrollArea } from "../ui/scroll-area";
+import NativeNavigation from "./native-navigation";
+import PlanUsage from "./plan-usage";
+import FoldersDropdownList from "./folders-dropdown-list";
 
 interface SidebarProps {
   params: { workspaceId: string };
@@ -39,33 +43,58 @@ const Sidebar = async ({ params, className }: SidebarProps) => {
 
   if (foldersError) return;
 
-    const privateWorkspaces = await getPrivateWorkspaces(user.id);
-    const sharedWorkspaces = await getSharedWorkspaces(user.id);
-    const collaboratingWorkspaces = await getCollaboratingWorkspaces(user.id);
+  const privateWorkspaces = await getPrivateWorkspaces(user.id);
+  const sharedWorkspaces = await getSharedWorkspaces(user.id);
+  const collaboratingWorkspaces = await getCollaboratingWorkspaces(user.id);
 
-    console.log(privateWorkspaces, sharedWorkspaces, collaboratingWorkspaces);
-  
-
-  return <aside
-  className={cn(
-    'hidden sm:flex sm:flex-col w-[280px] shrink-0 p-4 md:gap-4 !justify-between',
-    className
-  )}
->
-  <div>
-    <WorkspaceDropdown
-      privateWorkspaces={privateWorkspaces}
-      sharedWorkspaces={sharedWorkspaces}
-      collaboratingWorkspaces={collaboratingWorkspaces}
-      defaultValue={[
-        ...privateWorkspaces,
-        ...collaboratingWorkspaces,
-        ...sharedWorkspaces,
-      ].find((workspace) => workspace.id === params.workspaceId)}
-    />
-    </div>
-    
-</aside>
+  return (
+    <aside
+      className={cn(
+        "hidden sm:flex sm:flex-col w-[280px] shrink-0 p-4 md:gap-4 !justify-between",
+        className
+      )}
+    >
+      <div>
+        <WorkspaceDropdown
+          privateWorkspaces={privateWorkspaces}
+          sharedWorkspaces={sharedWorkspaces}
+          collaboratingWorkspaces={collaboratingWorkspaces}
+          defaultValue={[
+            ...privateWorkspaces,
+            ...collaboratingWorkspaces,
+            ...sharedWorkspaces,
+          ].find((workspace) => workspace.id === params.workspaceId)}
+        />
+        <PlanUsage
+          foldersLength={folders?.length || 0}
+          subscription={subscription}
+        />
+        <NativeNavigation myWorkspaceId={params.workspaceId} />
+        <ScrollArea
+          className="overflow-scroll relative
+          h-[450px]
+        "
+        >
+          <div
+            className="pointer-events-none 
+          w-full 
+          absolute 
+          bottom-0 
+          h-20 
+          bg-gradient-to-t 
+          from-background 
+          to-transparent 
+          z-40"
+          />
+          <FoldersDropdownList
+            workspaceFolders={folders || []}
+            workspaceId={params.workspaceId}
+          />
+        </ScrollArea>
+      </div>
+      {/* <UserCard subscription={subscriptionData} /> */}
+    </aside>
+  );
 };
 
 export default Sidebar;
