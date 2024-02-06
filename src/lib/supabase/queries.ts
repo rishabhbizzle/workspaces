@@ -31,6 +31,17 @@ export const createWorkspace = async (workspace: workspace) => {
   }
 };
 
+export const createFolder = async (folder: Folder) => {
+  try {
+    const results = await db.insert(folders).values(folder);
+    return { data: null, error: null };
+  } catch (error) {
+    console.log(error);
+    return { data: null, error: 'Error' };
+  }
+};
+
+
 export const getFolders = async (workspaceId: string) => {
   try {
     const isValid = validate(workspaceId);
