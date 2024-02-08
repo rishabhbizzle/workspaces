@@ -39,7 +39,6 @@ const CollaboratorSearch: React.FC<CollaboratorSearchProps> = ({
     };
   }, []);
 
-  const getUserData = ()=>{}
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (timerRef) clearTimeout(timerRef.current);
