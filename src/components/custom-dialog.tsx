@@ -30,8 +30,8 @@ const CustomDialogTrigger: React.FC<CustomDialogTriggerProps> = ({
       <DialogContent
         className="h-screen
         block
+        overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']
         sm:h-[440px]
-        overflow-scroll
         w-full
       "
       >
